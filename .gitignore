@@ -31,3 +31,5 @@ data_*/
 #bin
 *.os
 *.dblite
+*.cbp
+*.layout
