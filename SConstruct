@@ -19,6 +19,8 @@ godot_headers_path = "godot-cpp/godot-headers/"
 cpp_bindings_path = "godot-cpp/"
 cpp_library = "libgodot-cpp"
 
+sdl_library = "libSDL2"
+
 # only support 64 at this time..
 bits = 64
 
@@ -51,7 +53,10 @@ if env['platform'] == "osx":
 elif env['platform'] in ('x11', 'linux'):
     env['target_path'] += 'x11/'
     cpp_library += '.linux'
-    env.Append(LIBS=File("/usr/lib/libSDL2.so"))
+
+    # Include SDL2
+#    env.Append(LIBS=File("/usr/lib/libSDL2.so"))
+
     if env['target'] in ('debug', 'd'):
         env.Append(CCFLAGS = ['-fPIC', '-g3','-Og', '-std=c++17'])
     else:
@@ -80,14 +85,14 @@ cpp_library += '.' + str(bits)
 # make sure our binding library is properly includes
 env.Append(CPPPATH=['.', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
 env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
-env.Append(LIBS=[cpp_library])
+
+env.Append(LIBS=[cpp_library, sdl_library])
+
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])
 sources = Glob('src/*.cpp')
 
-#env.Append(LIBS=File("/usr/lib/x86_64-linux-gnu/libSDL2.so"))
-#env.Append(LIBS=File("/usr/lib/libSDL2.so"))
 
 library = env.SharedLibrary(target=env['target_path'] + env['target_name'] , source=sources)
 
