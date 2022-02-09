@@ -56,7 +56,7 @@ elif env['platform'] in ('x11', 'linux'):
 
     # Include SDL2
 #    env.Append(LIBS=File("/usr/lib/libSDL2.so"))
-
+    env.Append(LIBS=sdl_library)
     if env['target'] in ('debug', 'd'):
         env.Append(CCFLAGS = ['-fPIC', '-g3','-Og', '-std=c++17'])
     else:
@@ -86,8 +86,8 @@ cpp_library += '.' + str(bits)
 env.Append(CPPPATH=['.', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
 env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
 
-env.Append(LIBS=[cpp_library, sdl_library])
-
+#env.Append(LIBS=[cpp_library, sdl_library])
+env.Append(LIBS=[cpp_library])
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])

@@ -141,7 +141,7 @@ int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
     }
 
     if (iterations == 0){
-        iterations == SDL_HAPTIC_INFINITY;
+        iterations = SDL_HAPTIC_INFINITY;
     }
 
     if (SDL_HapticRunEffect(haptic, effect_id, iterations) != 0){
