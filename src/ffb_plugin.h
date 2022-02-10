@@ -29,8 +29,8 @@ class ffb_plugin : public Node
         int init_ffb(int p_device);
         int init_constant_force_effect();
         int update_constant_ffb_effect(float force, int effect_id);
-//        int play_constant_ffb_effect(int effect_id, Uint32 iterations);
-        int play_constant_ffb_effect(int effect_id, int iterations);
+        int play_constant_ffb_effect(int effect_id, Uint32 iterations);
+        //~ int play_constant_ffb_effect(int effect_id, int iterations);
         void destroy_ffb_effect(int effect_id);
         void close_ffb_device();
 };

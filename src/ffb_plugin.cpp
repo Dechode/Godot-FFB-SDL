@@ -41,21 +41,16 @@ bool has_constant_force = false;
 
 
 int ffb_plugin::init_ffb(int p_device){
-	//~ SDL_Joystick *joy;
 //  Initialize the joystick subsystem
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 	SDL_Init(SDL_INIT_HAPTIC);
-//  Check for joystick
+
 	if (SDL_NumJoysticks() > 0) {
-//      Open joystick
-		//~ joy = SDL_JoystickOpen(p_device);
-//		SDL_Haptic *haptic;
-//		SDL_HapticEffect effect;
 		haptic = SDL_HapticOpen(p_device);
 		if (haptic == NULL){
 			Godot::print("Cant open device, most likely joystick isn't haptic\n");
 			force_feedback = false;
-			return -1; // Most likely joystick isn't haptic
+			return -1;
 
 		} else {
 			force_feedback = true;
@@ -97,14 +92,11 @@ int ffb_plugin::init_constant_force_effect(){
 
     // Upload the effect
     effect_id = SDL_HapticNewEffect(haptic, &effect );
-    if (effect_id < 0) {
-        Godot::print("Error uploading effect ", SDL_GetError());
-    }
-//    cf_id = SDL_HapticNewEffect(haptic, &effect );
-    // Test the effect
-//    SDL_HapticRunEffect(haptic, effect_id, 1 );
-    //~ SDL_HapticRunEffect(haptic, effect_id, SDL_HAPTIC_INFINITY );
-    return 0;
+
+    Godot::print("Effect_id = " + String::num_int64(effect_id));
+
+    //~ return 0;
+    return effect_id;
 }
 
 
@@ -112,11 +104,6 @@ int ffb_plugin::update_constant_ffb_effect(float force, int effect_id){
     if (!force_feedback || !has_constant_force || effect_id == -1){
 		return -1;
 	}
-	//~ } else if (!has_constant_force){
-		//~ return -1;
-    //~ }
-
-//    SDL_HapticEffect effect;
 
 //  clamp ffb force between -1 and 1
     if (force>1.0) force=1.0;
@@ -132,15 +119,12 @@ int ffb_plugin::update_constant_ffb_effect(float force, int effect_id){
 }
 
 
-//int ffb_plugin::play_constant_ffb_effect(int effect_id, Uint32 iterations){
-int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
+int ffb_plugin::play_constant_ffb_effect(int effect_id, Uint32 iterations){
+//~ int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
     if (!force_feedback || !has_constant_force || effect_id == -1){
 		return -1;
 	}
 
-	//~ } else if (!has_constant_force){
-		//~ return -1;
-    //~ }
 
     if (iterations == 0){
         iterations = SDL_HAPTIC_INFINITY;
@@ -155,7 +139,7 @@ int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
 
 void ffb_plugin::destroy_ffb_effect(int effect_id){
 //  Delete effect
-    SDL_HapticDestroyEffect(haptic , effect_id);
+    SDL_HapticDestroyEffect(haptic ,effect_id);
 }
 
 
