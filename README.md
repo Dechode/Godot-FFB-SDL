@@ -9,3 +9,5 @@ Currently only compiles on linux! Only constant force for now.
 
 
 Download SDL2 from your package manager before using the plugin.
+
+This project is licensed under the MIT license, see LICENSE.md for more information. SDL2 uses the Zlib license, see https://www.libsdl.org/license.php
