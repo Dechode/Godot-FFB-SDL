@@ -8,8 +8,8 @@ void ffb_plugin::_register_methods(){
     godot::register_method("_init", &ffb_plugin::_init);
     godot::register_method("init_ffb", &ffb_plugin::init_ffb);
     godot::register_method("init_constant_force_effect", &ffb_plugin::init_constant_force_effect);
-    godot::register_method("update_constant_ffb_effect", &ffb_plugin::update_constant_ffb_effect);
-    godot::register_method("play_constant_ffb_effect", &ffb_plugin::play_constant_ffb_effect);
+    godot::register_method("update_constant_force_effect", &ffb_plugin::update_constant_ffb_effect);
+    godot::register_method("play_constant_force_effect", &ffb_plugin::play_constant_ffb_effect);
     godot::register_method("destroy_ffb_effect", &ffb_plugin::destroy_ffb_effect);
 
     godot::register_property("force_feedback", &ffb_plugin::force_feedback, false);
