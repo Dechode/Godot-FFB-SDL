@@ -43,7 +43,7 @@ bool has_constant_force = false;
 int ffb_plugin::init_ffb(int p_device){
 	//~ SDL_Joystick *joy;
 //  Initialize the joystick subsystem
-	//~ SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 	SDL_Init(SDL_INIT_HAPTIC);
 //  Check for joystick
 	if (SDL_NumJoysticks() > 0) {
@@ -103,7 +103,7 @@ int ffb_plugin::init_constant_force_effect(){
 //    cf_id = SDL_HapticNewEffect(haptic, &effect );
     // Test the effect
 //    SDL_HapticRunEffect(haptic, effect_id, 1 );
-    SDL_HapticRunEffect(haptic, effect_id, SDL_HAPTIC_INFINITY );
+    //~ SDL_HapticRunEffect(haptic, effect_id, SDL_HAPTIC_INFINITY );
     return 0;
 }
 
