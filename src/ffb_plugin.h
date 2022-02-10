@@ -17,7 +17,7 @@ class ffb_plugin : public Node
 
     int autocenter          = 0;
     bool force_feedback     = false;
-    int cf_id               = -1;
+    //int cf_id               = -1;
 
 //	SDL_Haptic *haptic;
 

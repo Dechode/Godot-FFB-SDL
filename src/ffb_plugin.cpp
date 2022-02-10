@@ -11,11 +11,12 @@ void ffb_plugin::_register_methods(){
     godot::register_method("update_constant_force_effect", &ffb_plugin::update_constant_ffb_effect);
     godot::register_method("play_constant_force_effect", &ffb_plugin::play_constant_ffb_effect);
     godot::register_method("destroy_ffb_effect", &ffb_plugin::destroy_ffb_effect);
+    godot::register_method("close_ffb_device", &ffb_plugin::close_ffb_device);
 
     godot::register_property("force_feedback", &ffb_plugin::force_feedback, false);
 //    godot::register_property("has_constant_force", &ffb_plugin::has_constant_force, false);
     godot::register_property("autocenter", &ffb_plugin::autocenter, 0);
-    godot::register_property("cf_id", &ffb_plugin::cf_id, -1);
+    //~ godot::register_property("cf_id", &ffb_plugin::cf_id, -1);
 
 }
 
@@ -40,14 +41,14 @@ bool has_constant_force = false;
 
 
 int ffb_plugin::init_ffb(int p_device){
-	SDL_Joystick *joy;
+	//~ SDL_Joystick *joy;
 //  Initialize the joystick subsystem
-	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+	//~ SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 	SDL_Init(SDL_INIT_HAPTIC);
 //  Check for joystick
 	if (SDL_NumJoysticks() > 0) {
 //      Open joystick
-		joy = SDL_JoystickOpen(p_device);
+		//~ joy = SDL_JoystickOpen(p_device);
 //		SDL_Haptic *haptic;
 //		SDL_HapticEffect effect;
 		haptic = SDL_HapticOpen(p_device);
@@ -108,12 +109,12 @@ int ffb_plugin::init_constant_force_effect(){
 
 
 int ffb_plugin::update_constant_ffb_effect(float force, int effect_id){
-    if (!force_feedback){
+    if (!force_feedback || !has_constant_force || effect_id == -1){
 		return -1;
-
-	} else if (!has_constant_force){
-		return -1;
-    }
+	}
+	//~ } else if (!has_constant_force){
+		//~ return -1;
+    //~ }
 
 //    SDL_HapticEffect effect;
 
@@ -133,12 +134,13 @@ int ffb_plugin::update_constant_ffb_effect(float force, int effect_id){
 
 //int ffb_plugin::play_constant_ffb_effect(int effect_id, Uint32 iterations){
 int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
-    if (!force_feedback){
+    if (!force_feedback || !has_constant_force || effect_id == -1){
 		return -1;
+	}
 
-	} else if (!has_constant_force){
-		return -1;
-    }
+	//~ } else if (!has_constant_force){
+		//~ return -1;
+    //~ }
 
     if (iterations == 0){
         iterations = SDL_HAPTIC_INFINITY;
