@@ -23,6 +23,8 @@ void ffb_plugin::_register_methods(){
 SDL_Haptic *haptic;
 SDL_HapticEffect effect;
 
+bool has_constant_force = false;
+
 ffb_plugin::ffb_plugin(){
 }
 
@@ -36,8 +38,6 @@ ffb_plugin::~ffb_plugin(){
 void ffb_plugin::_init(){
     ffb_plugin::init_ffb(0);
 }
-
-bool has_constant_force = false;
 
 
 int ffb_plugin::init_ffb(int p_device){
