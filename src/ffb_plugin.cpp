@@ -14,9 +14,8 @@ void ffb_plugin::_register_methods(){
     godot::register_method("close_ffb_device", &ffb_plugin::close_ffb_device);
 
     godot::register_property("force_feedback", &ffb_plugin::force_feedback, false);
-//    godot::register_property("has_constant_force", &ffb_plugin::has_constant_force, false);
     godot::register_property("autocenter", &ffb_plugin::autocenter, 0);
-    //~ godot::register_property("cf_id", &ffb_plugin::cf_id, -1);
+
 
 }
 
@@ -106,8 +105,8 @@ int ffb_plugin::update_constant_ffb_effect(float force, int effect_id){
 	}
 
 //  clamp ffb force between -1 and 1
-    if (force>1.0) force=1.0;
-    else if (force<-1.0) force=-1.0;
+    if (force>1.0) force = 1.0;
+    else if (force<-1.0) force = -1.0;
 
     effect.constant.level = (short) (force * 32767.0);
     effect.constant.length = 4294967295;

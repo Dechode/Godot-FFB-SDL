@@ -5,7 +5,6 @@
 #include "Godot.hpp"
 #include "Node.hpp"
 
-
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_haptic.h"
 
@@ -17,9 +16,6 @@ class ffb_plugin : public Node
 
     int autocenter          = 0;
     bool force_feedback     = false;
-    //int cf_id               = -1;
-
-//	SDL_Haptic *haptic;
 
     public:
         static void _register_methods();
