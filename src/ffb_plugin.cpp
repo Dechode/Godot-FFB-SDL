@@ -99,7 +99,7 @@ int ffb_plugin::init_constant_force_effect(){
 }
 
 
-int ffb_plugin::update_constant_ffb_effect(float force, int effect_id){
+int ffb_plugin::update_constant_ffb_effect(float force, int length, int effect_id){
     if (!force_feedback || !has_constant_force || effect_id == -1){
 		return -1;
 	}
@@ -108,8 +108,13 @@ int ffb_plugin::update_constant_ffb_effect(float force, int effect_id){
     if (force>1.0) force = 1.0;
     else if (force<-1.0) force = -1.0;
 
+//  Use sdl infinity if length == 0
+    if (length == 0) {
+        length = 4294967295;
+    }
+
     effect.constant.level = (short) (force * 32767.0);
-    effect.constant.length = 4294967295;
+    effect.constant.length = length;
 
     if (SDL_HapticUpdateEffect(haptic, effect_id, &effect) != 0) {
         return -1;
