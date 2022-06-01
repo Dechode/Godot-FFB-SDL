@@ -77,28 +77,28 @@ elif env['platform'] == "windows":
     env.Append(ENV = os.environ)
 
 
-    env.Append(CPPPATH=['include/'])
+    
     #env.Append(LIBS=['SDL2main','SDL2','SDL2_test'])
     #env.Append(LIBS=['mingw32', 'SDL2main','SDL2'])
     env.Append(LIBPATH=['lib/SDL2/'])
-    env.Append(LIBS=['mingw32','SDL2main','SDL2','m', 'dinput8', 'dxguid', 'dxerr8', 'user32', 'gdi32', 'winmm', 'imm32', 'ole32', 'oleaut32', 'shell32', 'version', 'uuid'])
+    env.Append(LIBS=['SDL2main','SDL2'])
+    env.Append(CPPPATH=['include/'])
 
 
-
-    env['CXX'] = 'x86_64-w64-mingw32-g++'
-    env.Append(CCFLAGS=['-O3', '-Wwrite-strings'])
+    #env['CXX'] = 'x86_64-w64-mingw32-g++'
+    #env.Append(CCFLAGS=['-O3', '-Wwrite-strings'])
     #env.Append(LINKFLAGS=['-mwindows','-shared'])
-    env.Append(LINKFLAGS=['-mwindows'])
-    #env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
-    #if env['target'] in ('debug', 'd'):
-        #env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
-    #else:
-        #env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
-    env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W', '-D_CRT_SECURE_NO_WARNINGS','-Dmain=SDL_main'])
+    #env.Append(LINKFLAGS=['-mwindows'])
+    env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
     if env['target'] in ('debug', 'd'):
-        env.Append(CCFLAGS = ['-D_DEBUG'])
+        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
     else:
         env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
+    #env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W', '-D_CRT_SECURE_NO_WARNINGS','-Dmain=SDL_main'])
+    #if env['target'] in ('debug', 'd'):
+    #    env.Append(CCFLAGS = ['-D_DEBUG'])
+    #else:
+    #    env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
 
 if env['target'] in ('debug', 'd'):
     cpp_library += '.debug'

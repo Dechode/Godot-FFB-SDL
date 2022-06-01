@@ -1,6 +1,10 @@
 
-#include "ffb_plugin.h"
 
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_haptic.h>
+#include <SDL2/SDL_joystick.h>
+#include "ffb_plugin.h"
 
 using namespace godot;
 
@@ -20,11 +24,13 @@ void ffb_plugin::_register_methods(){
 }
 
 SDL_Haptic *haptic;
+SDL_Joystick *joy;
 SDL_HapticEffect effect;
 
 bool has_constant_force = false;
 
 ffb_plugin::ffb_plugin(){
+    ffb_plugin::init_ffb(0);
 }
 
 
@@ -34,8 +40,13 @@ ffb_plugin::~ffb_plugin(){
 }
 
 
+// int main(int argc,char* argv[]){
+    // SDL_SetMainReady();
+    // return 0;
+// }
+
+
 void ffb_plugin::_init(){
-    ffb_plugin::init_ffb(0);
 }
 
 
@@ -43,12 +54,23 @@ int ffb_plugin::init_ffb(int p_device){
 //  Initialize the joystick subsystem and haptic system
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 	SDL_Init(SDL_INIT_HAPTIC);
-
-	if (!SDL_NumJoysticks() > 0) {
+	if (SDL_NumJoysticks() <= 0) {
         return -1;
 	}
 
-    haptic = SDL_HapticOpen(p_device);
+    joy = SDL_JoystickOpen(p_device);
+    if (joy == NULL) {
+        Godot::print("Cant open joy");
+        
+    }
+
+    if (SDL_JoystickIsHaptic(joy) == SDL_FALSE) {
+        Godot::print("Joy isnt haptic");
+        return -1;
+    }
+
+    //haptic = SDL_HapticOpen(p_device);
+    haptic = SDL_HapticOpenFromJoystick(joy);
     if (haptic == NULL){
         Godot::print("Cant open device, most likely joystick isn't haptic\n");
         force_feedback = false;
@@ -117,7 +139,7 @@ int ffb_plugin::update_constant_ffb_effect(float force, int length, int effect_i
 }
 
 
-int ffb_plugin::play_constant_ffb_effect(int effect_id, Uint32 iterations){
+int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
 //~ int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
     if (!force_feedback || !has_constant_force || effect_id == -1){
 		return -1;
@@ -142,5 +164,6 @@ void ffb_plugin::destroy_ffb_effect(int effect_id){
 
 
 void ffb_plugin::close_ffb_device(){
+    SDL_JoystickClose(joy);
     SDL_HapticClose(haptic);
 }
