@@ -21,7 +21,6 @@ godot_headers_path = "godot-cpp/godot-headers/"
 cpp_bindings_path = "godot-cpp/"
 cpp_library = "libgodot-cpp"
 
-sdl_library = "libSDL2"
 
 # only support 64 at this time..
 bits = 64
@@ -59,8 +58,7 @@ elif env['platform'] in ('x11', 'linux'):
     cpp_library += '.linux'
 
     # Include SDL2
-
-    env.Append(LIBS=sdl_library)
+    env.Append(LIBS="libSDL2")
     if env['target'] in ('debug', 'd'):
         env.Append(CCFLAGS = ['-fPIC', '-g3','-Og', '-std=c++17'])
     else:
@@ -76,29 +74,16 @@ elif env['platform'] == "windows":
     # that way you can run scons in a vs 2017 prompt and it will find all the required tools
     env.Append(ENV = os.environ)
 
-
-    
-    #env.Append(LIBS=['SDL2main','SDL2','SDL2_test'])
-    #env.Append(LIBS=['mingw32', 'SDL2main','SDL2'])
     env.Append(LIBPATH=['lib/SDL2/'])
     env.Append(LIBS=['SDL2main','SDL2'])
     env.Append(CPPPATH=['include/'])
 
 
-    #env['CXX'] = 'x86_64-w64-mingw32-g++'
-    #env.Append(CCFLAGS=['-O3', '-Wwrite-strings'])
-    #env.Append(LINKFLAGS=['-mwindows','-shared'])
-    #env.Append(LINKFLAGS=['-mwindows'])
     env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
     if env['target'] in ('debug', 'd'):
         env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
     else:
         env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
-    #env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W', '-D_CRT_SECURE_NO_WARNINGS','-Dmain=SDL_main'])
-    #if env['target'] in ('debug', 'd'):
-    #    env.Append(CCFLAGS = ['-D_DEBUG'])
-    #else:
-    #    env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
 
 if env['target'] in ('debug', 'd'):
     cpp_library += '.debug'
@@ -111,8 +96,6 @@ cpp_library += '.' + str(bits)
 env.Append(CPPPATH=['.', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
 env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
 
-#env.Append(LIBS=[cpp_library, sdl_library])
-env.Append(LIBS=[cpp_library])
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])
