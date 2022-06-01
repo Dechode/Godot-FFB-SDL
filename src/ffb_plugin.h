@@ -9,10 +9,10 @@
 #include "SDL2/SDL_haptic.h"
 
 
-namespace godot{
-class ffb_plugin : public Node
+// namespace godot{
+class ffb_plugin : public godot::Node
 {
-    GODOT_CLASS(ffb_plugin, Node)
+    GODOT_CLASS(ffb_plugin, godot::Node)
 
     int autocenter          = 0;
     bool force_feedback     = false;
@@ -31,5 +31,5 @@ class ffb_plugin : public Node
         void destroy_ffb_effect(int effect_id);
         void close_ffb_device();
 };
-}
+// }
 #endif // FFB_PLUGIN_H

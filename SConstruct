@@ -14,6 +14,8 @@ opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler", 'no'))
 opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'bin/'))
 opts.Add(PathVariable('target_name', 'The library name.', 'ffb-plugin-sdl', PathVariable.PathAccept))
 
+
+
 # Local dependency paths, adapt them to your setup
 godot_headers_path = "godot-cpp/godot-headers/"
 cpp_bindings_path = "godot-cpp/"
@@ -39,6 +41,8 @@ if env['platform'] == '':
     print("No valid target platform selected.")
     quit();
 
+
+
 # Check our platform specifics
 if env['platform'] == "osx":
     env['target_path'] += 'osx/'
@@ -55,7 +59,7 @@ elif env['platform'] in ('x11', 'linux'):
     cpp_library += '.linux'
 
     # Include SDL2
-#    env.Append(LIBS=File("/usr/lib/libSDL2.so"))
+
     env.Append(LIBS=sdl_library)
     if env['target'] in ('debug', 'd'):
         env.Append(CCFLAGS = ['-fPIC', '-g3','-Og', '-std=c++17'])
@@ -63,15 +67,36 @@ elif env['platform'] in ('x11', 'linux'):
         env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++17'])
 
 elif env['platform'] == "windows":
+    #env.Append(LINKFLAGS='/SUBSYSTEM:CONSOLE')
+
+
     env['target_path'] += 'win64/'
     cpp_library += '.windows'
     # This makes sure to keep the session environment variables on windows,
     # that way you can run scons in a vs 2017 prompt and it will find all the required tools
     env.Append(ENV = os.environ)
 
-    env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
+
+    env.Append(CPPPATH=['include/'])
+    #env.Append(LIBS=['SDL2main','SDL2','SDL2_test'])
+    #env.Append(LIBS=['mingw32', 'SDL2main','SDL2'])
+    env.Append(LIBPATH=['lib/SDL2/'])
+    env.Append(LIBS=['mingw32','SDL2main','SDL2'])
+
+
+
+    env['CXX'] = 'x86_64-w64-mingw32-g++'
+    #env.Append(CCFLAGS=['-O3', '-Wwrite-strings' ,'-lm', '-ldinput8', '-ldxguid', '-ldxerr8', '-luser32', '-lgdi32', '-lwinmm', '-limm32', '-lole32', '-loleaut32', '-lshell32', '-lversion', '-luuid'])
+    env.Append(LINKFLAGS=['-mwindows','-shared'])
+
+    #env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
+    #if env['target'] in ('debug', 'd'):
+        #env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
+    #else:
+        #env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
+    env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W', '-D_CRT_SECURE_NO_WARNINGS','-Dmain=SDL_main'])
     if env['target'] in ('debug', 'd'):
-        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
+        env.Append(CCFLAGS = ['-D_DEBUG'])
     else:
         env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
 
