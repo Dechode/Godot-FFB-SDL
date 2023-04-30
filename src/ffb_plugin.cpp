@@ -1,56 +1,36 @@
+//#define SDL_MAIN_HANDLED
+//#include <SDL2/SDL.h>
+//#include <SDL2/SDL_haptic.h>
+//#include <SDL2/SDL_joystick.h>
 
-
-#define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_haptic.h>
-#include <SDL2/SDL_joystick.h>
 #include "ffb_plugin.h"
 
 using namespace godot;
 
-void ffb_plugin::_register_methods(){
-    godot::register_method("_init", &ffb_plugin::_init);
-    godot::register_method("init_ffb", &ffb_plugin::init_ffb);
-    godot::register_method("init_constant_force_effect", &ffb_plugin::init_constant_force_effect);
-    godot::register_method("update_constant_force_effect", &ffb_plugin::update_constant_ffb_effect);
-    godot::register_method("play_constant_force_effect", &ffb_plugin::play_constant_ffb_effect);
-    godot::register_method("destroy_ffb_effect", &ffb_plugin::destroy_ffb_effect);
-    godot::register_method("close_ffb_device", &ffb_plugin::close_ffb_device);
-
-    godot::register_property("force_feedback", &ffb_plugin::force_feedback, false);
-    godot::register_property("autocenter", &ffb_plugin::autocenter, 0);
-
+void FFBPlugin::_bind_methods(){
+	ClassDB::bind_method(D_METHOD("_init"), &FFBPlugin::_init);
+    ClassDB::bind_method(D_METHOD("init_ffb"), &FFBPlugin::init_ffb);
+    ClassDB::bind_method(D_METHOD("init_constant_force_effect"), &FFBPlugin::init_constant_force_effect);
+    ClassDB::bind_method(D_METHOD("update_constant_force_effect"), &FFBPlugin::update_constant_ffb_effect);
+    ClassDB::bind_method(D_METHOD("play_constant_force_effect"), &FFBPlugin::play_constant_ffb_effect);
+    ClassDB::bind_method(D_METHOD("destroy_ffb_effect"), &FFBPlugin::destroy_ffb_effect);
+    ClassDB::bind_method(D_METHOD("close_ffb_device"), &FFBPlugin::close_ffb_device);
 
 }
 
-SDL_Haptic *haptic;
-SDL_Joystick *joy;
-SDL_HapticEffect effect;
-
-bool has_constant_force = false;
-
-ffb_plugin::ffb_plugin(){
-    ffb_plugin::init_ffb(0);
+FFBPlugin::FFBPlugin(){
+    // FFBPlugin::init_ffb(0);
 }
 
-
-ffb_plugin::~ffb_plugin(){
-    ffb_plugin::destroy_ffb_effect(0);
+FFBPlugin::~FFBPlugin(){
+    FFBPlugin::destroy_ffb_effect(0);
     SDL_HapticClose(haptic);
 }
 
-
-// int main(int argc,char* argv[]){
-    // SDL_SetMainReady();
-    // return 0;
-// }
-
-
-void ffb_plugin::_init(){
+void FFBPlugin::_init(){
 }
 
-
-int ffb_plugin::init_ffb(int p_device){
+int FFBPlugin::init_ffb(int p_device){
 //  Initialize the joystick subsystem and haptic system
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 	SDL_Init(SDL_INIT_HAPTIC);
@@ -60,19 +40,20 @@ int ffb_plugin::init_ffb(int p_device){
 
     joy = SDL_JoystickOpen(p_device);
     if (joy == NULL) {
-        Godot::print("Cant open joy");
+		//godot::print("Cant open joy");
+		return -1;
         
     }
 
     if (SDL_JoystickIsHaptic(joy) == SDL_FALSE) {
-        Godot::print("Joy isnt haptic");
+        //Godot::print("Joy isnt haptic");
         return -1;
     }
 
     //haptic = SDL_HapticOpen(p_device);
     haptic = SDL_HapticOpenFromJoystick(joy);
     if (haptic == NULL){
-        Godot::print("Cant open device, most likely joystick isn't haptic\n");
+        //Godot::print("Cant open device, most likely joystick isn't haptic\n");
         force_feedback = false;
         return -1;
     }
@@ -82,17 +63,16 @@ int ffb_plugin::init_ffb(int p_device){
 //      See if it can do constant force
     if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_CONSTANT)==0) {
         SDL_HapticClose(haptic); // No Constant effect
-        Godot::print("No constant force effect\n");
-        has_constant_force = false;
+        //Godot::print("No constant force effect\n");
+        constant_force = false;
         return -1;
     }
-    has_constant_force = true;
+    constant_force = true;
     return 0;
 }
 
-
-int ffb_plugin::init_constant_force_effect(){
-	if (has_constant_force == false) {
+int FFBPlugin::init_constant_force_effect(){
+	if (constant_force == false) {
 		return -1;
 	}
 
@@ -110,13 +90,12 @@ int ffb_plugin::init_constant_force_effect(){
     // Upload the effect
     effect_id = SDL_HapticNewEffect(haptic, &effect );
 
-    Godot::print("Effect_id = " + String::num_int64(effect_id));
+    //Godot::print("Effect_id = " + String::num_int64(effect_id));
     return effect_id;
 }
 
-
-int ffb_plugin::update_constant_ffb_effect(float force, int length, int effect_id){
-    if (!force_feedback || !has_constant_force || effect_id == -1){
+int FFBPlugin::update_constant_ffb_effect(float force, int length, int effect_id){
+    if (!force_feedback || !constant_force || effect_id == -1){
 		return -1;
 	}
 
@@ -138,10 +117,9 @@ int ffb_plugin::update_constant_ffb_effect(float force, int length, int effect_i
     return 0;
 }
 
-
-int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
-//~ int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
-    if (!force_feedback || !has_constant_force || effect_id == -1){
+int FFBPlugin::play_constant_ffb_effect(int effect_id, int iterations){
+//~ int FFBPlugin::play_constant_ffb_effect(int effect_id, int iterations){
+    if (!force_feedback || !constant_force || effect_id == -1){
 		return -1;
 	}
 
@@ -156,14 +134,12 @@ int ffb_plugin::play_constant_ffb_effect(int effect_id, int iterations){
 	return 0;
 }
 
-
-void ffb_plugin::destroy_ffb_effect(int effect_id){
-//  Delete effect
+void FFBPlugin::destroy_ffb_effect(int effect_id){
     SDL_HapticDestroyEffect(haptic ,effect_id);
 }
 
-
-void ffb_plugin::close_ffb_device(){
+void FFBPlugin::close_ffb_device(){
     SDL_JoystickClose(joy);
     SDL_HapticClose(haptic);
 }
+
