@@ -4,6 +4,9 @@
 //#include <SDL2/SDL_joystick.h>
 
 #include "ffb_plugin.h"
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+
 
 using namespace godot;
 
@@ -35,35 +38,44 @@ int FFBPlugin::init_ffb(int p_device){
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 	SDL_Init(SDL_INIT_HAPTIC);
 	if (SDL_NumJoysticks() <= 0) {
-        return -1;
+		UtilityFunctions::print("No joysticks found!");
+        //return -1;
 	}
 
     joy = SDL_JoystickOpen(p_device);
     if (joy == NULL) {
-		//godot::print("Cant open joy");
-		return -1;
+		UtilityFunctions::print("Cant open joy");
+		//return -1;
         
     }
 
     if (SDL_JoystickIsHaptic(joy) == SDL_FALSE) {
-        //Godot::print("Joy isnt haptic");
-        return -1;
+        UtilityFunctions::print("Joy isnt haptic");
+        //return -1;
     }
 
     //haptic = SDL_HapticOpen(p_device);
     haptic = SDL_HapticOpenFromJoystick(joy);
     if (haptic == NULL){
-        //Godot::print("Cant open device, most likely joystick isn't haptic\n");
+        UtilityFunctions::print("Cant open haptic from joy, trying from device\n");
+		haptic = SDL_HapticOpen(p_device);
+		if (haptic == NULL){
+        UtilityFunctions::print("Cant open device, most likely joystick isn't haptic\n");
         force_feedback = false;
-        return -1;
-    }
+        //return -1;
+		} else {force_feedback = true;}
+	} else {force_feedback = true;}
 
-    force_feedback = true;
+
+	if (!force_feedback)  {
+		UtilityFunctions::print("No force feedback found");
+		return -1;
+	}
 
 //      See if it can do constant force
     if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_CONSTANT)==0) {
         SDL_HapticClose(haptic); // No Constant effect
-        //Godot::print("No constant force effect\n");
+        UtilityFunctions::print("No constant force effect capabilities found!\n");
         constant_force = false;
         return -1;
     }

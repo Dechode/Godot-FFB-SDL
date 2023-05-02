@@ -14,15 +14,26 @@ env = SConscript("godot-cpp/SConstruct")
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 
-if env["platform"] == "windows":
-    env.Append(LIBPATH=['lib/SDL2/'])
-    env.Append(LIBS=['SDL2main','SDL2'])
-    env.Append(CPPPATH=['include/'])
+env.Append(CPPPATH=['include/'])
+env.Append(LIBS=['SDL2'])
 
-elif env["platform"] == "linux":
-    env.Append(CPPPATH=['include/'])
-    env.Append(LINKFLAGS='-lSDL2')
-    #env.Append(LIBS="libSDL2")
+if env["platform"] == "windows":
+    #env.Append(LIBS=['libSDL2main','libSDL2'])
+    #env.Append(CPPPATH=['include/'])
+    print("Compiling for windows")
+    env.Append(LIBPATH=['lib/SDL2/'])
+    #env.Append(LIBS=['SDL2main','SDL2'])
+    #env.Append(LIBS=['SDL2'])
+    env.Append(CPPFLAGS='-mwindows')
+    #env.Append(LIBS=' pkg-config --libs sdl2')
+    
+    #env.Append(CPPFLAGS='--shared')
+    #env.Append(CPPFLAGS='$(pkg-config --cflags --libs sdl2)')
+    env.Append(LINKFLAGS='-DSDL_MAIN_HANDLED')
+
+#elif env["platform"] == "linux":
+    #env.Append(CPPPATH=['include/'])
+    #env.Append(LINKFLAGS='-lSDL2')
 
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
