@@ -15,9 +15,9 @@ env = SConscript("godot-cpp/SConstruct")
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 
 if env["platform"] == "windows":
-    env.Append(LIBPATH=['lib/SDL2/'])
-    env.Append(LIBS=['SDL2main','SDL2'])
     env.Append(CPPPATH=['include/'])
+    env.Append(LIBPATH=['lib/SDL2/'])
+    env.Append(LIBS=['SDL2.dll.dll'])
 
 elif env["platform"] == "linux":
     env.Append(CPPPATH=['include/'])
