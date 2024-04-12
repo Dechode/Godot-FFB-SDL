@@ -2,7 +2,7 @@
 
 SDL2 haptic system wrapper for godot. see https://www.libsdl.org/
 
-This is a GDNative project, see https://docs.godotengine.org/fi/stable/tutorials/plugins/gdnative/gdnative-cpp-example.html 
+This is a GDExtension project, see https://docs.godotengine.org/en/4.2/tutorials/scripting/gdextension/gdextension_cpp_example.html
 
 Only supports constant force for now.
 

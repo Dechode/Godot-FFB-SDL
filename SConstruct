@@ -17,7 +17,13 @@ env = SConscript("godot-cpp/SConstruct")
 if env["platform"] == "windows":
     env.Append(CPPPATH=['include/'])
     env.Append(LIBPATH=['lib/SDL2/'])
-    env.Append(LIBS=['SDL2.dll.dll'])
+    print("CXX is: " + env["CXX"])
+    if env["CXX"] == "$CC":
+        # Different .lib-file for MS Visual C.
+        # You can download these with the dlls from SDL's releases: https://github.com/libsdl-org/SDL/releases
+        env.Append(LIBS=['SDL2_VC'])
+    else:
+        env.Append(LIBS=['SDL2.dll.dll'])
 
 elif env["platform"] == "linux":
     env.Append(CPPPATH=['include/'])
